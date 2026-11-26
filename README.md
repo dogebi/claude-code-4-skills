@@ -29,6 +29,11 @@ AI 감지기 통과용이 아님 등)를 함께 적었습니다.
 - 상단 읽기 진행 막대, 스크롤에 따른 목차 하이라이트
 - 라이트/다크 테마 토글 — 첫 방문은 시스템 설정을 따르고, 선택은 `localStorage`에 저장
   (다이어그램·코드 블록도 CSS 변수로 함께 전환)
+- 한국어 · 中文 · 日本語 — 상단 `KO / 中文 / 日本語` 전환. 첫 방문은 `navigator.language`,
+  선택은 `localStorage`(`cc4.lang`). `<html lang>`도 `ko` / `zh-Hans` / `ja`로 함께 바뀌고,
+  중국어·일본어는 `word-break: normal`로 줄바꿈 규칙을 바꿉니다(한국어는 `keep-all` 유지)
+- 번역 원본은 `i18n/{ko,zh,ja}.json`, 빌드 스크립트가 `index.html`의
+  `/*I18N_START*/ … /*I18N_END*/` 사이에 인라인합니다 — 배포본은 여전히 단일 파일·외부 요청 0
 - 한국어 줄바꿈(`word-break: keep-all`)으로 단어 중간이 끊기지 않게 처리
 - 본문 크기는 `--t-body`/`--t-dense`/`--t-label` 세 토큰으로만 지정, `prefers-reduced-motion`
   에서 부드러운 스크롤과 진행 막대 애니메이션을 끔
@@ -42,6 +47,13 @@ AI 감지기 통과용이 아님 등)를 함께 적었습니다.
 ```bash
 python3 tools/deploy_pages.py --dry-run
 python3 tools/deploy_pages.py
+```
+
+문구를 고칠 때는 `i18n/*.json`을 고친 뒤 인라인을 다시 만들어야 합니다
+(키 집합·HTML 태그 수·빈 값·비한국어 로케일의 한글 잔여를 검사하고, 실패하면 쓰지 않습니다).
+
+```bash
+python3 tools/build_i18n.py
 ```
 
 `tools/deploy_pages.py`는 `dogebi/dogebi.github.io`의 `master` 브랜치
